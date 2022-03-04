@@ -16,8 +16,9 @@ package goldpinger
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"io/ioutil"
+
+	"go.uber.org/zap"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snet "k8s.io/utils/net"
