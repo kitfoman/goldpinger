@@ -46,7 +46,7 @@ type Pinger struct {
 func NewPinger(pod *GoldpingerPod, resultsChan chan<- PingAllPodsResult) *Pinger {
 	p := Pinger{
 		pod:         pod,
-		timeout:     time.Duration(GoldpingerConfig.PingTimeoutMs) * time.Millisecond,
+		timeout:     GoldpingerConfig.PingTimeout,
 		resultsChan: resultsChan,
 		stopChan:    make(chan struct{}),
 
@@ -54,6 +54,7 @@ func NewPinger(pod *GoldpingerPod, resultsChan chan<- PingAllPodsResult) *Pinger
 			GoldpingerConfig.Hostname,
 			"ping",
 			pod.HostIP,
+			pod.Hostname,
 			pod.PodIP,
 		),
 
@@ -61,6 +62,7 @@ func NewPinger(pod *GoldpingerPod, resultsChan chan<- PingAllPodsResult) *Pinger
 			zap.String("op", "pinger"),
 			zap.String("name", pod.Name),
 			zap.String("hostIP", pod.HostIP),
+			zap.String("hostName", pod.Hostname),
 			zap.String("podIP", pod.PodIP),
 		),
 	}
@@ -89,6 +91,7 @@ func (p *Pinger) getClient() (*apiclient.Goldpinger, error) {
 				PingTime:       strfmt.DateTime(time.Now()),
 				PodIP:          p.podIPv4,
 				HostIP:         p.hostIPv4,
+				Hostname:       p.pod.Hostname,
 				OK:             &OK,
 				Error:          err.Error(),
 				StatusCode:     500,
@@ -128,6 +131,7 @@ func (p *Pinger) Ping() {
 				PingTime:       strfmt.DateTime(start),
 				PodIP:          p.podIPv4,
 				HostIP:         p.hostIPv4,
+				Hostname:       p.pod.Hostname,
 				OK:             &OK,
 				Response:       resp.Payload,
 				StatusCode:     200,
@@ -142,6 +146,7 @@ func (p *Pinger) Ping() {
 				PingTime:       strfmt.DateTime(start),
 				PodIP:          p.podIPv4,
 				HostIP:         p.hostIPv4,
+				Hostname:       p.pod.Hostname,
 				OK:             &OK,
 				Error:          err.Error(),
 				StatusCode:     504,

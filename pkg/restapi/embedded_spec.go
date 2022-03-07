@@ -143,6 +143,9 @@ func init() {
           "type": "string",
           "format": "ipv4"
         },
+        "Hostname": {
+          "type": "string"
+        },
         "OK": {
           "type": "boolean",
           "default": false
@@ -184,6 +187,9 @@ func init() {
               "hostIP": {
                 "type": "string",
                 "format": "ipv4"
+              },
+              "hostName": {
+                "type": "string"
               },
               "podIP": {
                 "type": "string",
@@ -313,6 +319,9 @@ func init() {
         "HostIP": {
           "type": "string",
           "format": "ipv4"
+        },
+        "Hostname": {
+          "type": "string"
         },
         "OK": {
           "type": "boolean",
@@ -471,6 +480,9 @@ func init() {
           "type": "string",
           "format": "ipv4"
         },
+        "Hostname": {
+          "type": "string"
+        },
         "OK": {
           "type": "boolean",
           "default": false
@@ -532,6 +544,9 @@ func init() {
         "hostIP": {
           "type": "string",
           "format": "ipv4"
+        },
+        "hostName": {
+          "type": "string"
         },
         "podIP": {
           "type": "string",
@@ -644,6 +659,9 @@ func init() {
         "HostIP": {
           "type": "string",
           "format": "ipv4"
+        },
+        "Hostname": {
+          "type": "string"
         },
         "OK": {
           "type": "boolean",

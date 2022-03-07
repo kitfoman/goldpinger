@@ -68,6 +68,7 @@ var (
 			"goldpinger_instance",
 			"call_type",
 			"host_ip",
+			"host_name",
 			"pod_ip",
 		},
 	)
@@ -183,12 +184,13 @@ func GetLabeledKubernetesCallsTimer() *prometheus.Timer {
 }
 
 // returns a timer for easy observing of the duration of calls to peers
-func GetLabeledPeersCallsTimer(callType, hostIP, podIP string) *prometheus.Timer {
+func GetLabeledPeersCallsTimer(callType, hostIP, hostName, podIP string) *prometheus.Timer {
 	return prometheus.NewTimer(
 		goldpingerResponseTimePeersHistogram.WithLabelValues(
 			GoldpingerConfig.Hostname,
 			callType,
 			hostIP,
+			hostName,
 			podIP,
 		),
 	)

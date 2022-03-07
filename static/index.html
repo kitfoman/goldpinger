@@ -235,7 +235,7 @@ var main = function(timeout){
                 for (let podIP in resp) {
                         let value = resp[podIP];
                         nodes.push({
-                                "label": podIP + " (" + value.HostIP + ")",
+                                "label": podIP + " (" + value.Hostname + " | " + value.HostIP + ")",
                                 "id": podIP,
                                 "x": 0,
                                 "y": 0,

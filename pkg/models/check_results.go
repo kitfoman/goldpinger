@@ -53,6 +53,8 @@ func (m *CheckResults) validateDNSResults(formats strfmt.Registry) error {
 		if err := m.DNSResults.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("dnsResults")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("dnsResults")
 			}
 			return err
 		}
@@ -73,6 +75,11 @@ func (m *CheckResults) validatePodResults(formats strfmt.Registry) error {
 		}
 		if val, ok := m.PodResults[k]; ok {
 			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("podResults" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("podResults" + "." + k)
+				}
 				return err
 			}
 		}
@@ -105,6 +112,8 @@ func (m *CheckResults) contextValidateDNSResults(ctx context.Context, formats st
 	if err := m.DNSResults.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("dnsResults")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("dnsResults")
 		}
 		return err
 	}

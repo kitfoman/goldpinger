@@ -46,6 +46,8 @@ definitions:
       HostIP:
         type: string
         format: ipv4
+      Hostname:
+        type: string
       response:
           $ref: '#/definitions/PingResults'
       error:
@@ -78,6 +80,8 @@ definitions:
       HostIP:
         type: string
         format: ipv4
+      Hostname:
+        type: string
       response:
         $ref: '#/definitions/CheckResults'
       error:
@@ -107,6 +111,8 @@ definitions:
             hostIP:
               type: string
               format: ipv4
+            hostName:
+              type: string
             podIP:
               type: string
               format: ipv4

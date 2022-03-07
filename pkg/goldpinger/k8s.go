@@ -33,7 +33,9 @@ type GoldpingerPod struct {
 	Name   string // Name is the name of the pod
 	PodIP  string // PodIP is the IP address of the pod
 	HostIP string // HostIP is the IP address of the host where the pod lives
+	HostName string //HostName is the hostname where the pod lives in 
 }
+
 
 func getPodNamespace() string {
 	b, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
@@ -114,6 +116,7 @@ func GetAllPods() map[string]*GoldpingerPod {
 			Name:   pod.Name,
 			PodIP:  getPodIP(pod),
 			HostIP: getHostIP(pod),
+			HostName: pod.Spec.NodeName
 		}
 	}
 	return podMap

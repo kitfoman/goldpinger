@@ -93,6 +93,8 @@ func (m *CheckAllResults) validateHosts(formats strfmt.Registry) error {
 			if err := m.Hosts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("hosts" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("hosts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -115,6 +117,11 @@ func (m *CheckAllResults) validateResponses(formats strfmt.Registry) error {
 		}
 		if val, ok := m.Responses[k]; ok {
 			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("responses" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("responses" + "." + k)
+				}
 				return err
 			}
 		}
@@ -169,6 +176,8 @@ func (m *CheckAllResults) contextValidateHosts(ctx context.Context, formats strf
 			if err := m.Hosts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("hosts" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("hosts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -220,6 +229,9 @@ type CheckAllResultsHostsItems0 struct {
 	// host IP
 	// Format: ipv4
 	HostIP strfmt.IPv4 `json:"hostIP,omitempty"`
+
+	// host name
+	HostName string `json:"hostName,omitempty"`
 
 	// pod IP
 	// Format: ipv4

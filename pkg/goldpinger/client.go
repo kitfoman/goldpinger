@@ -148,6 +148,7 @@ func checkDNS() *models.DNSResults {
 // CheckServicePodsResult results of the /check operation
 type CheckServicePodsResult struct {
 	podName           string
+	hostName          string
 	checkAllPodResult models.CheckAllPodResult
 	hostIPv4          strfmt.IPv4
 	podIPv4           strfmt.IPv4
@@ -173,11 +174,12 @@ func CheckAllPods(checkAllCtx context.Context, pods map[string]*GoldpingerPod) *
 
 			// stats
 			CountCall("made", "check")
-			timer := GetLabeledPeersCallsTimer("check", pod.HostIP, pod.PodIP)
+			timer := GetLabeledPeersCallsTimer("check", pod.HostIP, pod.hostname, pod.PodIP)
 
 			// setup
 			var channelResult CheckServicePodsResult
 			channelResult.podName = pod.Name
+			channelResult.hostName = pod.Hostname
 			channelResult.hostIPv4.UnmarshalText([]byte(pod.HostIP))
 			channelResult.podIPv4.UnmarshalText([]byte(pod.PodIP))
 			client, err := getClient(pickPodHostIP(pod.PodIP, pod.HostIP))
@@ -186,10 +188,11 @@ func CheckAllPods(checkAllCtx context.Context, pods map[string]*GoldpingerPod) *
 			if err != nil {
 				logger.Warn("Couldn't get a client for Check", zap.Error(err))
 				channelResult.checkAllPodResult = models.CheckAllPodResult{
-					OK:     &OK,
-					PodIP:  channelResult.podIPv4,
-					HostIP: channelResult.hostIPv4,
-					Error:  err.Error(),
+					OK:       &OK,
+					PodIP:    channelResult.podIPv4,
+					HostIP:   channelResult.hostIPv4,
+					Hostname: channelResult.hostName,
+					Error:    err.Error(),
 				}
 				CountError("checkAll")
 			} else {
@@ -208,16 +211,18 @@ func CheckAllPods(checkAllCtx context.Context, pods map[string]*GoldpingerPod) *
 						OK:       &OK,
 						PodIP:    channelResult.podIPv4,
 						HostIP:   channelResult.hostIPv4,
+						Hostname: channelResult.hostName,
 						Response: resp.Payload,
 					}
 					timer.ObserveDuration()
 				} else {
 					logger.Warn("Check returned error", zap.Error(err))
 					channelResult.checkAllPodResult = models.CheckAllPodResult{
-						OK:     &OK,
-						PodIP:  channelResult.podIPv4,
-						HostIP: channelResult.hostIPv4,
-						Error:  err.Error(),
+						OK:       &OK,
+						PodIP:    channelResult.podIPv4,
+						HostIP:   channelResult.hostIPv4,
+						Hostname: channelResult.hostName,
+						Error:    err.Error(),
 					}
 					CountError("checkAll")
 				}
@@ -234,6 +239,7 @@ func CheckAllPods(checkAllCtx context.Context, pods map[string]*GoldpingerPod) *
 		result.Responses[response.podName] = response.checkAllPodResult
 		result.Hosts = append(result.Hosts, &models.CheckAllResultsHostsItems0{
 			PodName: response.podName,
+			Hostname: response.hostName,
 			HostIP:  response.hostIPv4,
 			PodIP:   response.podIPv4,
 		})

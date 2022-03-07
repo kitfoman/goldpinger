@@ -23,6 +23,9 @@ type PodResult struct {
 	// Format: ipv4
 	HostIP strfmt.IPv4 `json:"HostIP,omitempty"`
 
+	// hostname
+	Hostname string `json:"Hostname,omitempty"`
+
 	// o k
 	OK *bool `json:"OK,omitempty"`
 
@@ -118,6 +121,8 @@ func (m *PodResult) validateResponse(formats strfmt.Registry) error {
 		if err := m.Response.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("response")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("response")
 			}
 			return err
 		}
@@ -146,6 +151,8 @@ func (m *PodResult) contextValidateResponse(ctx context.Context, formats strfmt.
 		if err := m.Response.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("response")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("response")
 			}
 			return err
 		}
