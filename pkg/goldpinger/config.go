@@ -43,6 +43,9 @@ var GoldpingerConfig = struct {
 	IPVersions []string `long:"ip-versions" description:"The IP versions to use (space delimited). Possible values are 4 and 6 (defaults to 4)." env:"IP_VERSIONS" env-delim:" "`
 
 	// Timeouts
+	PingTimeoutMs     int64         `long:"ping-timeout-ms" description:"The timeout in milliseconds for a ping call to other goldpinger pods(deprecated)" env:"PING_TIMEOUT_MS" default:"300"`
+	CheckTimeoutMs    int64         `long:"check-timeout-ms" description:"The timeout in milliseconds for a check call to other goldpinger pods(deprecated)" env:"CHECK_TIMEOUT_MS" default:"1000"`
+	CheckAllTimeoutMs int64         `long:"check-all-timeout-ms" description:"The timeout in milliseconds for a check-all call to other goldpinger pods(deprecated)" env:"CHECK_ALL_TIMEOUT_MS" default:"5000"`
 	PingTimeout      time.Duration `long:"ping-timeout" description:"The timeout for a ping call to other goldpinger pods" env:"PING_TIMEOUT" default:"300ms"`
 	CheckTimeout     time.Duration `long:"check-timeout" description:"The timeout for a check call to other goldpinger pods" env:"CHECK_TIMEOUT" default:"1000ms"`
 	CheckAllTimeout  time.Duration `long:"check-all-timeout" description:"The timeout for a check-all call to other goldpinger pods" env:"CHECK_ALL_TIMEOUT" default:"5000ms"`
